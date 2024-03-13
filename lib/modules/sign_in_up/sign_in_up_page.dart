@@ -17,6 +17,16 @@ class SignInUpPage extends StatefulWidget {
 
 class _SignInUpPageState extends State<SignInUpPage> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+     ConstantHelper().loadJsonData().then((value) {
+        ConstantHelper().parseJsonData(value);
+      });
+      
+      print("data= ${ConstantHelper.events}");
+  }
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2, // Number of tabs

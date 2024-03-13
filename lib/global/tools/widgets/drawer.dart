@@ -1,7 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:local_event_finder/global/firebase/firebase_auth_helper.dart';
 import 'package:local_event_finder/global/tools/constants/constant_helper.dart';
+import 'package:local_event_finder/modules/Favorites/favorites.dart';
+import 'package:local_event_finder/modules/home/home_page.dart';
+import 'package:local_event_finder/modules/local_event_list/local_event_list.dart';
+import 'package:local_event_finder/modules/local_event_map/widget/local_event_map.dart';
+import 'package:local_event_finder/modules/sign_in_up/sign_in_up_page.dart';
 
 class AppMainDrawer extends StatefulWidget {
   const AppMainDrawer({super.key});
@@ -25,6 +31,42 @@ class _AppMainDrawerState extends State<AppMainDrawer> {
     //     });
     super.initState();
     print("user info = ${ConstantHelper.user?.displayName}");
+  }
+
+  Future<void> _showLogoutConfirmationDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmation'),
+          content: const Text('Are you sure you want to log out?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await FirebaseAuthHelper.firebaseSignOut().then((value) {
+                  if (value == true) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SignInUpPage(),
+                      ),
+                    );
+                  }
+                });
+              },
+              child: const Text('Log Out'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -59,43 +101,12 @@ class _AppMainDrawerState extends State<AppMainDrawer> {
                                       color: Color(0xff024562), size: 24.0)),
                             ),
                           ),
-                          // const Text('Bienvenue chez BRP',
-                          //     style: TextStyle(
-                          //         fontWeight: FontWeight.bold,
-                          //         color: Colors.white)),
-                          // const SizedBox(
-                          //   height: 12,
-                          // ),
-                          Container(
-                            padding: const EdgeInsets.only(
-                                right: 24, left: 4, top: 4, bottom: 4),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(120.0),
-                              color: Colors.white.withOpacity(.2),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // CircleAvatar(
-                                //   backgroundColor: ThemeColor.whiteColor,
-                                //   child: SvgPicture.asset(
-                                //     ConstantsHelper.userAvatarIcon,
-                                //     semanticsLabel: 'User avatar',
-                                //   ),
-                                // ),
-                                const SizedBox(
-                                  width: 12,
-                                ),
-                                // Text(
-                                //     isUserInfoLoaded
-                                //         ? driverName
-                                //         : HttpRequest.driverCode,
-                                //     style: TextStyle(
-                                //         fontSize: ConstantsHelper.sizex12,
-                                //         fontWeight: FontWeight.bold,
-                                //         color: Colors.white))
-                              ],
-                            ),
+                          Text('${ConstantHelper.user?.displayName}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white)),
+                          const SizedBox(
+                            height: 12,
                           ),
                           const SizedBox(
                             height: 12.0,
@@ -117,7 +128,11 @@ class _AppMainDrawerState extends State<AppMainDrawer> {
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white)),
-                        onTap: () {}),
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
+                        }),
                     ListTile(
                       leading: const Icon(
                         Icons.map_rounded,
@@ -128,7 +143,12 @@ class _AppMainDrawerState extends State<AppMainDrawer> {
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               color: Colors.white)),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                              builder: (context) => LocalEventMap()),
+                        );
+                      },
                     ),
                     ListTile(
                       leading: const Icon(
@@ -140,7 +160,12 @@ class _AppMainDrawerState extends State<AppMainDrawer> {
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               color: Colors.white)),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                              builder: (context) => LocalEventList()),
+                        );
+                      },
                     ),
                     ListTile(
                       leading: const Icon(
@@ -152,13 +177,35 @@ class _AppMainDrawerState extends State<AppMainDrawer> {
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               color: Colors.white)),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => Favorites()),
+                        );
+                      },
                     ),
                   ],
                 ),
               ],
             ),
           ),
+          GestureDetector(
+            onTap: ()async {
+                                await _showLogoutConfirmationDialog();
+
+            },
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15, right: 5, left: 15),
+                  child: Icon(Icons.logout, color: Colors.white),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15, right: 5),
+                  child: Text('Log out', style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            ),
+          )
 
           // GestureDetector(
           //   onTap: () => HomeScreenController().showLogoutModal(ctx: context),

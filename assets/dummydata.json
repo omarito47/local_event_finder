@@ -1,0 +1,43 @@
+
+{
+    "userLocation": {
+      "latitude": 36.8618195,
+      "longitude": 10.1680867
+    },
+    
+        "events": [
+          {
+            "fav":false,
+            "name": "Formation Flutter",
+            "latitude": 36.862345,
+      "longitude": 10.167890,
+            "time": "2024-03-15 10:00 AM",
+            "description": "Join us for a formation session on Flutter development.",
+            "organizers": "Flutter Community",
+            "imageUrl": "https://media.istockphoto.com/id/1353769234/fr/photo/concept-de-formation-et-de-d%C3%A9veloppement-des-comp%C3%A9tences-avec-des-ic%C3%B4nes-de-cours-en-ligne.jpg?s=612x612&w=0&k=20&c=A6_zjic1Zboous8LnMXlZt660YrfQ1aIS2Xef1rdsSI="
+          },
+          {
+            "fav":false,
+
+            "name": "Party",
+            "latitude": 36.861632,
+      "longitude": 10.169521,
+            "time": "2024-03-17 8:00 PM",
+            "description": "Join us for a fun-filled party with music and dance.",
+            "organizers": "Party Planners",
+            "imageUrl": "https://as2.ftcdn.net/v2/jpg/00/91/03/83/1000_F_91038333_C6b2EeBuxMcVjJpvdtdG2dMZijoSUkDX.jpg"
+          },
+          {
+            "fav":false,
+
+            "name": "Opening Gym",
+            "latitude": 36.860987,
+      "longitude": 10.167278,
+            "time": "2024-03-20 9:00 AM",
+            "description": "Join us for the grand opening of our new gym facility.",
+            "organizers": "Fitness Center",
+            "imageUrl": "https://emilypost.com/client_media/images/blogs/everyday-gym.jpg"
+          }
+        ]
+      
+  }

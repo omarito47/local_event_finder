@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:local_event_finder/global/model/local_event.dart';
+import 'package:local_event_finder/global/tools/widgets/drawer.dart';
 
 class LocalEventMap extends StatefulWidget {
   static const routeName = '/LocalEventMap-widget';
@@ -22,7 +27,52 @@ class _LocalEventMapState extends State<LocalEventMap> {
   @override
   void initState() {
     super.initState();
+    _loadJsonData().then((jsonData) {
+      setState(() {
+        _events = _parseEvents(jsonData);
+      });
+    });
     initializeLocation();
+  }
+
+  List<Event> _events = [];
+
+  Future<String> _loadJsonData() async {
+    return await rootBundle.loadString('assets/dummydata.json');
+  }
+
+  List<Event> _parseEvents(String jsonData) {
+    Map<String, dynamic> data = jsonDecode(jsonData);
+    List<Event> events = [];
+    for (var eventJson in data['events']) {
+      Event event = Event.fromJson(eventJson);
+      events.add(event);
+    }
+    return events;
+  }
+
+  Set<Marker> _createMarkers() {
+    Set<Marker> markers = _events.map((event) {
+      return Marker(
+        markerId: MarkerId(event.name),
+        position: LatLng(event.latitude, event.longitude),
+        infoWindow: InfoWindow(
+          title: event.name,
+          snippet: event.description,
+        ),
+      );
+    }).toSet();
+    markers.add(
+      Marker(
+        markerId: MarkerId('userLocation'),
+        position: initialPosition,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        infoWindow: InfoWindow(
+          title: 'Your Location',
+        ),
+      ),
+    );
+    return markers;
   }
 
   void initializeLocation() async {
@@ -34,7 +84,7 @@ class _LocalEventMapState extends State<LocalEventMap> {
     setState(() {
       initialPosition = LatLng(position.latitude, position.longitude);
       isLoading = false;
-      print(position);
+      print("pos ---> $position");
     });
   }
 
@@ -42,26 +92,20 @@ class _LocalEventMapState extends State<LocalEventMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text('Map Screen'),
+        title: Text('Local Events Map'),
       ),
+      drawer: const AppMainDrawer(),
       body: isLoading
           ? Center(
               child: CircularProgressIndicator(), // Loading widget
             )
           : GoogleMap(
-            onMapCreated: _onMapCreated,
+              onMapCreated: _onMapCreated,
               initialCameraPosition: CameraPosition(
                 target: initialPosition,
-                zoom: 15,
+                zoom: 17,
               ),
-              markers: Set<Marker>.from([
-                Marker(
-                  markerId: MarkerId('currentLocation'),
-                  position: initialPosition,
-                ),
-              ]),
-            ),
+              markers: _createMarkers()),
     );
   }
 }
