@@ -1,10 +1,18 @@
-# local_event_finder
+## Local Event Finder
+Description
+Local Event Finder is a Flutter application that allows users to discover and browse local events in their area. The app provides features for user authentication, maps integration, event browsing, and event interaction.
 
-A new Flutter project.
+  
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+
+## Features
+- Implement user authentication and profile creation functionality, allowing users to sign up, log in (use Firebase for the authentication).
+
+- Integrate maps functionality into the app to display the user's current location and nearby events on a map view (using Google Maps).
+- Develop features for users to view local event details such as location, time, description, and organizers.
+- Enable users to interact with event by adding events to their favorites.
+
 
 A few resources to get you started if this is your first Flutter project:
 
