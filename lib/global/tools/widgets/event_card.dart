@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:local_event_finder/global/model/local_event.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:share_plus/share_plus.dart';
 
 class EventCard extends StatefulWidget {
   final Event event;
   final int eventIndex;
   final Function(Event) onFavoriteToggled;
 
-  EventCard({required this.event, required this.eventIndex, required this.onFavoriteToggled});
+  EventCard({
+    required this.event,
+    required this.eventIndex,
+    required this.onFavoriteToggled,
+  });
 
   @override
   State<EventCard> createState() => _EventCardState();
@@ -41,18 +46,28 @@ class _EventCardState extends State<EventCard> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(
-                        widget.event.fav
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                        color: widget.event.fav ? Colors.red : null,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          widget.onFavoriteToggled(widget.event);
-                        });
-                      },
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            widget.event.fav
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: widget.event.fav ? Colors.red : null,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              widget.onFavoriteToggled(widget.event);
+                            });
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.share),
+                          onPressed: () {
+                            Share.share(widget.event.name,subject: widget.event.description);
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
